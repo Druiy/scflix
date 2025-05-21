@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>制作信息</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      line-height: 1.6;
+    }
+
+    .team-container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .team-member {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      border-bottom: 1px solid #ccc;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    .team-member:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .team-member:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .team-member:last-child {
+      border-bottom: none;
+    }
+
+    .member-avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-right: 30px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .member-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .member-info h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .member-info p {
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="team-container">
+    <h1>制作人员</h1>
+    <div class="team-member">
+      <img src="sc.jpg" alt="1" class="member-avatar">
+      <div class="member-info">
+        <h2>Druiy</h2>
+        <p>➡全能型</p >
+        <p>负责APP整体内容，以及大部分布局</>
+      </div>
+    </div>
+ <div class="team-member">
+      <img src="gjd.jpg" alt="2" class="member-avatar">
+      <div class="member-info">
+        <h2>。</h2>
+        <p>➡技术型</p >
+        <p>负责APP的CSS内容，以及图片资源</>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

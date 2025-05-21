@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<section id="new" class="new">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机选择器</title>
+ 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5bae32',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        neutral: '#F3F4F6',
+                        dark: '#1F2937',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.7);
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(to right, #5bae32, #5bae32);
+            }
+            .option-input {
+                transition: all 0.3s ease;
+            }
+            .option-input:focus-within {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .result-animation {
+                animation: pulse 0.5s ease-in-out;
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            .btn-hover-effect {
+                transition: all 0.2s ease;
+            }
+            .btn-hover-effect:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-inter bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 glass-effect border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-random text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-dark">随机选择<span class="text-gradient">器</span></h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href=" " class="text-gray-600 hover:text-primary transition-colors">选择器</a ></li>
+                    <li><a href="#about" class="text-gray-600 hover:text-primary transition-colors">关于</a ></li>
+                </ul>
+            </nav>
+            <button class="md:hidden text-gray-600">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </header>
+    <!-- 主要内容 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- 介绍部分 -->
+        <section class="mb-16 text-center">
+            <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark mb-4">
+                自定义<span class="text-gradient">随机选择</span>器
+            </h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                创建你自己的随机选择列表，添加任意数量的选项，让命运帮你做决定
+            </p >
+            <div class="flex justify-center mt-8">
+                <a href="#selector" class="bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 btn-hover-effect">
+                    <i class="fa-solid fa-cog mr-2"></i> 创建选择器
+                </a >
+            </div>
+        </section>
+
+        <!-- 选择器部分 -->
+        <section id="selector" class="max-w-4xl mx-auto mb-16">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-primary to-accent p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">随机选择器</h3>
+                    <p class="text-white/80">输入选项，随机选择一个结果</p >
+                </div>
+                <div class="p-6">
+                    <div class="mb-6">
+                        <label for="options-input" class="block text-sm font-medium text-gray-700 mb-1">选项列表</label>
+                        <p class="text-xs text-gray-500 mb-2">每行输入一个选项</p >
+                        <textarea id="options-input" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none" placeholder="例如：
+选项1
+选项2
+选项3"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <button id="add-option-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center btn-hover-effect">
+                            <i class="fa-solid fa-plus mr-2"></i> 添加选项
+                        </button>
+                        <button id="clear-options-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center btn-hover-effect">
+                            <i class="fa-solid fa-trash mr-2"></i> 清空选项
+                        </button>
+                    </div>
+                    
+                    <button id="select-random-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg shadow hover:shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center btn-hover-effect">
+                        <i class="fa-solid fa-random mr-2"></i> 随机选择
+                    </button>
+                    
+                    <div id="result-container" class="mt-6 hidden">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-lg font-medium text-gray-800 mb-3">随机选择结果</h4>
+                            <div id="result" class="text-2xl font-bold text-primary p-4 bg-blue-50 rounded-lg text-center min-h-[60px] flex items-center justify-center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于部分 -->
+        <section id="about" class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-16">
+            <h3 class="text-2xl font-bold text-dark mb-4">关于随机选择器</h3>
+            <p class="text-gray-600 mb-4">
+                随机选择器是一种简单而实用的决策工具，可以帮助你在多个选项之间做出随机选择。
+            </p >
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-info-circle text-primary"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">如何使用</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        <li>在文本框中输入所有选项，每行一个</li>
+                        <li>点击"随机选择"按钮</li>
+                        <li>系统会从所有选项中随机选择一个并显示结果</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-lightbulb text-secondary"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 mb-2">使用场景</h4>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        <li>决策</li>
+                        <li>抽奖</li>
+                        <li>游戏选择</li>
+                        <li>餐厅选择</li>
+                        <li>随机分配</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h4 class="text-lg font-bold mb-2">随机选择器</h4>
+                <p class="text-gray-400 max-w-md mx-auto mb-4">
+                    
+                </p >
+
+<p>______________________________________________</p>
+
+
+
+
+
+
+
+                <div class="border-t border-gray-800 pt-4 mt-4 text-sm text-gray-500">
+
+
+<p class="text-lg font-bold mb-4">快速链接</p>
+                    <ul class="space-y-2">
+                        <li>
+
+
+<a href="#new">回到顶部</a></li>
+<li>
+<a href="a1.html" >刷新</a>
+
+</li>
+
+
+
+
+
+
+                    <p>© 2025 随机选择器 | SCFLIX</p >
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const optionsInput = document.getElementById('options-input');
+            const addOptionBtn = document.getElementById('add-option-btn');
+            const clearOptionsBtn = document.getElementById('clear-options-btn');
+            const selectRandomBtn = document.getElementById('select-random-btn');
+            const resultContainer = document.getElementById('result-container');
+            const resultElement = document.getElementById('result');// 默认选项
+            optionsInput.value = `选项1
+选项2
+选项3
+选项4`;
+            
+            // 添加选项按钮点击事件
+            addOptionBtn.addEventListener('click', () => {
+                const options = optionsInput.value.split('\n').filter(option => option.trim() !== '');
+                options.push(`选项${options.length + 1}`);
+                optionsInput.value = options.join('\n');
+                
+                // 添加输入框动画
+                optionsInput.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.3)';
+                setTimeout(() => {
+                    optionsInput.style.boxShadow = '';
+                }, 300);
+                
+                // 聚焦到输入框底部
+                optionsInput.focus();
+                optionsInput.selectionStart = optionsInput.selectionEnd = optionsInput.value.length;
+            });
+            
+            // 清空选项按钮点击事件
+            clearOptionsBtn.addEventListener('click', () => {
+                // 添加确认对话框
+                if (optionsInput.value.trim() === '') {
+                    // 如果已经为空，显示提示
+                    resultContainer.classList.remove('hidden');
+                    resultElement.textContent = '选项列表已经为空';
+                    resultElement.classList.add('text-gray-500');
+                    resultElement.classList.remove('text-primary');
+                    
+                    // 添加结果动画
+                    resultElement.classList.add('result-animation');
+                    setTimeout(() => {
+                        resultElement.classList.remove('result-animation');
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        resultContainer.classList.add('hidden');
+                    }, 2000);
+                } else {
+                    // 使用自定义确认对话框
+                    const confirmDialog = document.createElement('div');
+                    confirmDialog.className = 'fixed inset-0 flex items-center justify-center z-50';
+                    confirmDialog.innerHTML = `
+                        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+                        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4 relative z-10 transform transition-all scale-95 opacity-0" id="confirm-modal">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">确认清空</h3>
+                            <p class="text-gray-600 mb-4">你确定要清空所有选项吗？此操作不可撤销。</p >
+                            <div class="flex space-x-3">
+                                <button id="confirm-cancel" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                                    取消
+                                </button>
+                                <button id="confirm-yes" class="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                                    确认清空
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(confirmDialog);
+                    
+                    // 显示确认对话框动画
+                    const modal = document.getElementById('confirm-modal');
+                    setTimeout(() => {
+                        modal.classList.remove('scale-95', 'opacity-0');
+                        modal.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                    
+                    // 取消按钮点击事件
+                    document.getElementById('confirm-cancel').addEventListener('click', () => {
+                        modal.classList.remove('scale-100', 'opacity-100');
+                        modal.classList.add('scale-95', 'opacity-0');
+                        setTimeout(() => {
+                            document.body.removeChild(confirmDialog);
+                        }, 300);
+                    });
+                    
+                    // 确认按钮点击事件
+                    document.getElementById('confirm-yes').addEventListener('click', () => {
+                        optionsInput.value = '';
+                        
+                        // 添加清空动画
+                        optionsInput.style.backgroundColor = '#FEE2E2';
+                        setTimeout(() => {
+                            optionsInput.style.backgroundColor = '';
+                        }, 300);
+                        
+                        // 隐藏结果容器
+                        resultContainer.classList.add('hidden');
+                        
+                        // 关闭确认对话框
+                        modal.classList.remove('scale-100', 'opacity-100');
+                        modal.classList.add('scale-95', 'opacity-0');
+                        setTimeout(() => {
+                            document.body.removeChild(confirmDialog);
+                        }, 300);
+                    });
+                }
+            });
+            
+            // 随机选择按钮点击事件
+            selectRandomBtn.addEventListener('click', () => {
+                const optionsText = optionsInput.value.trim();
+                
+                if (!optionsText) {
+                    // 显示错误提示
+                    resultContainer.classList.remove('hidden');
+                    resultElement.textContent = '请至少输入一个选项';
+                    resultElement.classList.add('text-red-500');
+                    resultElement.classList.remove('text-primary');
+                    
+                    // 添加结果动画
+                    resultElement.classList.add('result-animation');
+                    setTimeout(() => {
+                        resultElement.classList.remove('result-animation');
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        resultContainer.classList.add('hidden');
+                    }, 3000);
+                    
+                    return;
+                }
+                
+                const options = optionsText.split('\n').filter(option => option.trim() !== '');
+                
+                if (options.length === 0) {
+                    // 显示错误提示
+                    resultContainer.classList.remove('hidden');
+                    resultElement.textContent = '请至少输入一个有效选项';
+                    resultElement.classList.add('text-red-500');
+                    resultElement.classList.remove('text-primary');
+                    
+                    // 添加结果动画
+                    resultElement.classList.add('result-animation');
+                    setTimeout(() => {
+                        resultElement.classList.remove('result-animation');
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        resultContainer.classList.add('hidden');
+                    }, 3000);
+                    
+                    return;
+                }
+                
+                // 随机选择一个选项
+                const randomIndex = Math.floor(Math.random() * options.length);
+                const selectedOption = options[randomIndex];
+                
+                // 显示结果
+                resultElement.textContent = selectedOption;
+                resultElement.classList.remove('text-red-500', 'text-gray-500');
+                resultElement.classList.add('text-primary');
+                resultContainer.classList.remove('hidden');
+                
+                // 添加结果动画
+                resultElement.classList.add('result-animation');
+                setTimeout(() => {
+                    resultElement.classList.remove('result-animation');
+                }, 500);
+                
+                // 平滑滚动到结果
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+            
+            // 为输入框添加自动高度调整
+            optionsInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // 初始化输入框高度
+            optionsInput.style.height = (optionsInput.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #5bae23;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            
+            // 分阶段执行跳转
+            setTimeout(() => {
+                // 第一步：先触发加载动画的淡出
+                loader.style.opacity = '0';
+
+                // 第二步：在淡出动画完成后执行不可逆跳转
+                setTimeout(() => {
+                    // 使用 replace 方法替换历史记录
+                    window.location.replace('dr.html'); // ← 修改为目标地址
+                }, 500); // 这个时间需匹配CSS过渡时间
+            }, 1500); // 模拟加载时间（按需调整）
+        });
+    </script>
+</body>
+</html>

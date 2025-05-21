@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCFLIX</title>
+  <style>
+    /* 全局样式 */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #b7d07a;
+      scroll-behavior: smooth;
+    }
+
+    /* 导航栏样式 */
+    nav {
+      background-color: #b7d07a;
+      color: white;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background-color 0.3s ease;
+    }
+
+    nav:hover {
+      background-color: #;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+      position: relative;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 0;
+      display: block;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #4CAF50;
+      transition: width 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #4CAF50;
+    }
+
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    /* 二级菜单样式 */
+    .submenu {
+      display: none;
+      position: absolute;
+      background-color: #5eab23;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    nav ul li:hover .submenu {
+      display: block;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .submenu a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    .submenu a:hover {
+      background-color: #813c85;
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* 主要内容区域样式 */
+    .container {
+      padding: 50px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 100px 0;
+      background-image: linear-gradient(135deg, #4C9500 0%, #c668DE 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('') no-repeat center center;
+      background-size: cover;
+      opacity: 0.1;
+      z-index: 0;
+    }
+  .no-underline{
+    text-decoration:none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 2s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      animation: pulse 0s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+
+ .btn {
+  display: block;          
+  background-color: white;
+  color: #4CAF50;
+  padding: 15px 25px;      
+  margin: 10px auto;        /* 上下间距 10px，左右自动居中 */
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: bold;
+  transition: all 0.5s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: fit-content;      
+  max-width: 100%;         
+}
+
+    .btn:hover {
+      background-color: #f1f1f1;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature {
+      text-align: center;
+      margin: 80px 0;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .feature.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature:hover .feature-icon {
+      transform: rotate(360deg) scale(1.2);
+    }
+
+    .feature h2 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .feature p {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin: 80px 0;
+    }
+
+    .product-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 300px;
+      transition: all 0.3s ease;
+      transform: translateY(0);
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.1);
+    }
+
+    .product-content {
+      padding: 20px;
+    }
+
+    .product-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .product-content p {
+      margin-bottom: 20px;
+    }
+.sc{
+     display:flex;
+     justify-justify-content:center;
+     align-align-items:center;
+     
+
+
+
+    }
+    .product-btn {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .product-btn:hover {
+      background-color: #2E7D32;
+    }
+
+    footer {
+      background-color: #813c85;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<audio src="a.mp3" autoplay loop id="audio"></audio>
+
+
+<section id="new" class="new">
+  <nav>
+    <ul>
+      <li><a href=" #new">首页</a ></li>
+      <li>
+        <a href="#products">介绍</a >
+        <div class="submenu">
+         
+        </div>
+      </li>
+
+      <li>
+        <a href="#services">工具</a >
+        <div class="submenu">
+          <a href="a2.html">进制转换器</a >
+          <a href="a1.html">随机选择器(新)</a >
+        </div>
+      </li>
+      <li><a href="#about">关于</a ></li>
+      <li><a href="#contact">反馈</a ></li>
+    </ul>
+  </nav>
+
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>欢迎使用SCFLIX</h1>
+      <h3>目前正在开发的前瞻测试版本</h3>
+      <h3>Ver0.5</h3>
+      <h5>想了解新功能？点我跳转</h5>
+      <a href="#logg" class="btn">版本更新日志</a >
+      <a href="#products" class="btn">版本新功能介绍</a >
+    </div>
+  </section>
+<section id="logg" class="logg">
+  <div class="container">
+    <section id="features" class="features">
+      <div class="feature" id="feature1">
+        <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+
+
+        <h2>版本更新日志</h2>
+
+
+
+
+<h2>Ver0.5</h2>
+<p>1.加入主页面背景音乐资源</p>
+<p>2.优化了部分UI及其显示效果</p>
+<p>3.修复了“关于”页面滑动错位的Bug</p>
+<div class="feature" id="feature2">
+        <div class="feature-icon"><i class="fas fa-shipping-fast"></i></div>
+
+
+
+
+
+
+
+
+
+<h2>Ver0.4</h2>
+<p>本次优化了部分动画效果，并加入了制作单独信息页面</p>
+<div class="feature" id="feature2">
+        <div class="feature-icon"><i class="fas fa-shipping-fast"></i></div>
+
+
+
+
+
+
+
+
+
+        <h2>Ver0.3</h2>
+        
+        <p>1.此次更新新增功能选项，加入两项实用功能。</p >
+        <p>2.移除了介绍栏按钮</p>
+      </div>
+
+
+
+
+
+
+      <div class="feature" id="feature2">
+        <div class="feature-icon"><i class="fas fa-shipping-fast"></i></div>
+
+
+
+        <h2>Ver0.2</h2>
+        <p>1.此次更新新增介绍页面，为用户提供更好的交互效果。</p >
+        <p>2.修复介绍栏按钮概率无法使用的bug</p>
+      </div>
+
+      <div class="feature" id="feature3">
+        <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+        <h2>Ver0.1</h2>
+        <p>新颖布局，界面简洁，新增动画效果。</p >
+        <p> </p>
+<h2>版本新功能介绍</h2>
+      </div>
+    </section>
+
+    <section id="products" class="products">
+
+
+
+
+      
+      
+      
+      
+      
+      
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+     
+      <div class="product-card">
+      
+      
+      
+      
+        <div class="product-image">
+          <img src="a3.jpg" alt="1">
+        </div>
+        <div class="product-content">
+          <h3>制作信息页面(新)</h3>
+          <p>查看制作人员。</p >
+        </div>
+      </div>
+      
+      
+      
+      
+      <div class="product-card">
+        <div class="product-image">
+          <img src="a1.jpg" alt="1">
+        </div>
+        <div class="product-content">
+          <h3>进制转换器</h3>
+          <p>进行快速的进制转换。</p >
+        </div>
+      </div>
+
+
+
+
+      <div class="product-card">
+        <div class="product-image">
+          <img src="a2.jpg" alt="2">
+        </div>
+        <div class="product-content">
+          <h3>随机选择器</h3>
+          
+ <p>还在因为无法抉择而烦恼吗？那就交给我吧！</p >
+         
+        </div>
+      </div>
+
+      
+    </section>
+
+
+
+<section id="about" class="about">
+<p></p>
+  <p></p>
+    
+    
+    
+    
+    
+      <h2 class="text-center mb-6">关于</h2>
+
+      <p>SCFLIX是一个简约风格的小APP(穷，租不起☁️服务器)</p>
+<p>Druiy®系列的衍生作品.</p>
+<p>背景音乐:Bloom of Youth (青春绽放)</p>
+<p>EXPLORE THE UNKNOWN.</p>
+<p>一路上，SCFLIX伴您前行。</p>
+      <a href="at.html" target="_blank">
+  <button style="
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  ">
+    了解更多制作信息
+  </button>
+</a>
+    </section>
+
+    <section id="contact" class="contact">
+      <h2 class="text-center mb-6">反馈</h2>
+      <p>如果您有任何问题或优秀建议，亦或是想加入我们的团队，请随时联系我们。
+      </p>
+<p>我们将竭诚为您服务。</p >
+    
+      <p>邮箱：dongfang26k@163.com(注明来意)</p >
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 SCFLIX,all rightsrights reserved.</p >
+
+
+<a href="#new" style="color:rgb(0, 255, 26);" class="no-underline">点我回到顶部</a>
+  </footer>
+
+  <script>
+    // 页面滚动动画
+    document.addEventListener('DOMContentLoaded', function() {
+      // 检测元素是否在视口中
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      // 为每个特性添加观察者
+      document.querySelectorAll('.feature').forEach(feature => {
+        observer.observe(feature);
+      });
+
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+ 
+  
+  
+  
+
+  const audio = document.getElementById('audio');
+  let isPausedByTab = false; // 记录标签页切换时的暂停状态
+
+  // 页面显示/隐藏控制
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { // 离开页面
+      isPausedByTab = !audio.paused;
+      audio.pause();
+    } else { // 返回页面
+      if (isPausedByTab) audio.play();
+    }
+  });
+
+  // 示例：点击按钮控制播放（可替换为你的按钮）
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('music-btn')) {
+      audio[audio.paused ? 'play' : 'pause']();
+    }
+  });
+</script>
+
+
+
+
+
+</body>
+
+</html>
